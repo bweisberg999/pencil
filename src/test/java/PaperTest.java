@@ -73,11 +73,32 @@ public class PaperTest {
     }
 
     @Test
-    public void givenPaperWithAFullSentenceWithTheSameWordTwiceConsecutiveErasesOccursTwice() {
-        paper.write("How much wood would a woodchuck chuck if a woodchuck could chuck wood?");
-        paper.erase("chuck");
-        paper.erase("chuck");
-        assertEquals("How much wood would a woodchuck chuck if a wood      could       wood?", paper.getText());
+    public void givenPaperWithAFullSentenceWeCanErasePartOfAWord() {
+        paper.write("Peter Piper picked a peck of pickled peppers");
+        paper.erase("pick");
+        assertEquals("Peter Piper picked a peck of     led peppers", paper.getText());
+    }
+
+    @Test
+    public void givenPaperWithOneErasedWordWeCanWriteSomethingNewInThatSpace() {
+        paper.write("PeterPiper");
+        paper.erase("PeterPiper");
+        paper.edit("Peter");
+        assertEquals("Peter     ", paper.getText());
+    }
+
+    @Test
+    public void givenPaperWithOneSpaceInSentenceWeCanCollideWithExistingCharacters() {
+        paper.write("Peter Piper picked a peck of     led peppers");
+        paper.edit(" whitt");
+        assertEquals("Peter Piper picked a peck of whit@ed peppers", paper.getText());
+    }
+
+    @Test
+    public void givenPaperWithTwoSpacesInSentenceEditOnlyFillsInFirstSpace() {
+        paper.write("How much wood would a woodchuck chuck if a wood      could       wood?");
+        paper.edit("block");
+        assertEquals("How much wood would a woodchuck chuck if a woodblock could       wood?", paper.getText());
     }
 
 }
